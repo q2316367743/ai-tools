@@ -80,7 +80,7 @@ import * as monaco from 'monaco-editor';
 import type {AiToolPost} from '@/types/AiTool';
 import MessageUtil from '@/utils/modal/MessageUtil';
 import {isDark, useAiToolsStore} from '@/store';
-import {openCodeRunnerDrawer} from "@/components/CodeRunnerDrawer/CodeRunnerDrawer";
+import {openCodeRunnerDrawer} from "@/components/CodeRunnerDrawer";
 
 const route = useRoute();
 const router = useRouter();

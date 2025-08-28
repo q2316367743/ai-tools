@@ -13,7 +13,7 @@
         </t-select>
       </t-space>
       <t-space size="small">
-        <t-button theme="primary" shape="square" disabled>
+        <t-button theme="primary" shape="square" @click="handleChat">
           <template #icon>
             <chat-icon/>
           </template>
@@ -92,7 +92,7 @@ import {AddIcon, ChatIcon, DeleteIcon, EditIcon, SearchIcon, ToolsIcon} from "td
 import {AiTool} from "@/types/AiTool";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {openCodeRunner} from "@/components/CodeRunnerDrawer/CodeRunnerDrawer";
+import {openCodeRunner} from "@/components/CodeRunnerDrawer";
 
 const router = useRouter();
 
@@ -117,6 +117,7 @@ const list = computed(() => {
 const handleEdit = (row: AiTool) => router.push('/edit/' + row.id);
 const handlePreview = (row: AiTool) => openCodeRunner(row.id);
 const handleAdd = () => router.push('/edit/0');
+const handleChat = () => router.push('/chat');
 const handleDelete = (row: AiTool) => {
   // 删除
   MessageBoxUtil.confirm(`是否立即删除工具「${row.title}」，删除后无法恢复`, "删除工具")

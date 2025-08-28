@@ -5,6 +5,7 @@
       "name": "vite-utools-template",
       "dependencies": {
         "@imengyu/vue3-context-menu": "^1.5.2",
+        "@tdesign-vue-next/chat": "^0.4.5",
         "@vueuse/core": "^10.11.1",
         "@vueuse/integrations": "^13.8.0",
         "axios": "1.8.2",
@@ -218,6 +219,8 @@
 
     "@rollup/rollup-win32-x64-msvc": ["@rollup/rollup-win32-x64-msvc@4.44.1", "http://mirrors.tencent.com/npm/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.44.1.tgz", { "os": "win32", "cpu": "x64" }, "sha512-J8o22LuF0kTe7m+8PvW9wk3/bRq5+mRo5Dqo6+vXb7otCm3TPhYOJqOaQtGU9YMWQSL3krMnoOxMr0+9E6F3Ug=="],
 
+    "@tdesign-vue-next/chat": ["@tdesign-vue-next/chat@0.4.5", "https://registry.npmmirror.com/@tdesign-vue-next/chat/-/chat-0.4.5.tgz", { "dependencies": { "@babel/runtime": "^7.22.6", "@types/lodash-es": "^4.17.12", "clipboard": "^2.0.11", "highlight.js": "^11.9.0", "lodash-es": "^4.17.21", "marked": "^12.0.1", "marked-highlight": "^2.1.1", "tdesign-icons-vue-next": "^0.3.6", "tdesign-vue-next": "^1.15.2" }, "peerDependencies": { "vue": ">=3.1.0" } }, "sha512-oM+NaVS2+QAC3tvlKCIm92dYvJVTzjPZip48WicCoWK42XyjKDau+hJiEb8TRXTMOw3kAkK7zrO79N0tWmBQnQ=="],
+
     "@types/eslint": ["@types/eslint@9.6.1", "http://mirrors.tencent.com/npm/@types/eslint/-/eslint-9.6.1.tgz", { "dependencies": { "@types/estree": "*", "@types/json-schema": "*" } }, "sha512-FXx2pKgId/WyYo2jXw63kk7/+TY7u7AziEJxJAnSFzHlqTAS3Ync6SvgYAN/k4/PQpnnVuzoMuVnByKK2qp0ag=="],
 
     "@types/eslint-scope": ["@types/eslint-scope@3.7.7", "http://mirrors.tencent.com/npm/@types/eslint-scope/-/eslint-scope-3.7.7.tgz", { "dependencies": { "@types/eslint": "*", "@types/estree": "*" } }, "sha512-MzMFlSLBqNF2gcHWO0G1vP/YQyfvrxZ0bF+u7mzUdZ1/xK4A4sru+nraZz5i3iEIk1l1uyicaDVTB4QbbEkAYg=="],
@@ -408,6 +411,8 @@
 
     "chrome-trace-event": ["chrome-trace-event@1.0.4", "http://mirrors.tencent.com/npm/chrome-trace-event/-/chrome-trace-event-1.0.4.tgz", {}, "sha512-rNjApaLzuwaOTjCiT8lSDdGN1APCiqkChLMJxJPWLunPAt5fy8xgU9/jNOchV84wfIxrA0lRQB7oCT8jrn/wrQ=="],
 
+    "clipboard": ["clipboard@2.0.11", "https://registry.npmmirror.com/clipboard/-/clipboard-2.0.11.tgz", { "dependencies": { "good-listener": "^1.2.2", "select": "^1.1.2", "tiny-emitter": "^2.0.0" } }, "sha512-C+0bbOqkezLIsmWSvlsXS0Q0bmkugu7jcfMIACB+RDEntIzQIkdr148we28AfSloQLRdZlYL/QYyrq05j/3Faw=="],
+
     "colorette": ["colorette@2.0.20", "http://mirrors.tencent.com/npm/colorette/-/colorette-2.0.20.tgz", {}, "sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w=="],
 
     "combined-stream": ["combined-stream@1.0.8", "http://mirrors.tencent.com/npm/combined-stream/-/combined-stream-1.0.8.tgz", { "dependencies": { "delayed-stream": "~1.0.0" } }, "sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg=="],
@@ -435,6 +440,8 @@
     "defu": ["defu@6.1.4", "http://mirrors.tencent.com/npm/defu/-/defu-6.1.4.tgz", {}, "sha512-mEQCMmwJu317oSz8CwdIOdwf3xMif1ttiM8LTufzc3g6kR+9Pe236twL8j3IYT1F7GfRgGcW6MWxzZjLIkuHIg=="],
 
     "delayed-stream": ["delayed-stream@1.0.0", "http://mirrors.tencent.com/npm/delayed-stream/-/delayed-stream-1.0.0.tgz", {}, "sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ=="],
+
+    "delegate": ["delegate@3.2.0", "https://registry.npmmirror.com/delegate/-/delegate-3.2.0.tgz", {}, "sha512-IofjkYBZaZivn0V8nnsMJGBr4jVLxHDheKSW88PyxS5QC4Vo9ZbZVvhzlSxY87fVq3STR6r+4cGepyHkcWOQSw=="],
 
     "destr": ["destr@2.0.5", "http://mirrors.tencent.com/npm/destr/-/destr-2.0.5.tgz", {}, "sha512-ugFTXCtDZunbzasqBxrK93Ik/DRYsO6S/fedkWEMKqt04xZ4csmnmwGDBAb07QWNaGMAmnTIemsYZCksjATwsA=="],
 
@@ -512,6 +519,8 @@
 
     "globals": ["globals@11.12.0", "http://mirrors.tencent.com/npm/globals/-/globals-11.12.0.tgz", {}, "sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA=="],
 
+    "good-listener": ["good-listener@1.2.2", "https://registry.npmmirror.com/good-listener/-/good-listener-1.2.2.tgz", { "dependencies": { "delegate": "^3.1.2" } }, "sha512-goW1b+d9q/HIwbVYZzZ6SsTr4IgE+WA44A0GmPIQstuOrgsFcT7VEJ48nmr9GaRtNu0XTKacFLGnBPAM6Afouw=="],
+
     "gopd": ["gopd@1.2.0", "http://mirrors.tencent.com/npm/gopd/-/gopd-1.2.0.tgz", {}, "sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg=="],
 
     "graceful-fs": ["graceful-fs@4.2.11", "http://mirrors.tencent.com/npm/graceful-fs/-/graceful-fs-4.2.11.tgz", {}, "sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ=="],
@@ -577,6 +586,8 @@
     "make-dir": ["make-dir@2.1.0", "http://mirrors.tencent.com/npm/make-dir/-/make-dir-2.1.0.tgz", { "dependencies": { "pify": "^4.0.1", "semver": "^5.6.0" } }, "sha512-LS9X+dc8KLxXCb8dni79fLIIUA5VyZoyjSMCwTluaXA0o27cCK0bhXkpgw+sTXVpPy/lSO57ilRixqk0vDmtRA=="],
 
     "marked": ["marked@16.2.1", "https://registry.npmmirror.com/marked/-/marked-16.2.1.tgz", { "bin": { "marked": "bin/marked.js" } }, "sha512-r3UrXED9lMlHF97jJByry90cwrZBBvZmjG1L68oYfuPMW+uDTnuMbyJDymCWwbTE+f+3LhpNDKfpR3a3saFyjA=="],
+
+    "marked-highlight": ["marked-highlight@2.2.2", "https://registry.npmmirror.com/marked-highlight/-/marked-highlight-2.2.2.tgz", { "peerDependencies": { "marked": ">=4 <17" } }, "sha512-KlHOP31DatbtPPXPaI8nx1KTrG3EW0Z5zewCwpUj65swbtKOTStteK3sNAjBqV75Pgo3fNEVNHeptg18mDuWgw=="],
 
     "math-intrinsics": ["math-intrinsics@1.1.0", "http://mirrors.tencent.com/npm/math-intrinsics/-/math-intrinsics-1.1.0.tgz", {}, "sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g=="],
 
@@ -676,6 +687,8 @@
 
     "scule": ["scule@1.3.0", "http://mirrors.tencent.com/npm/scule/-/scule-1.3.0.tgz", {}, "sha512-6FtHJEvt+pVMIB9IBY+IcCJ6Z5f1iQnytgyfKMhDKgmzYG+TeH/wx1y3l27rshSbLiSanrR9ffZDrEsmjlQF2g=="],
 
+    "select": ["select@1.1.2", "https://registry.npmmirror.com/select/-/select-1.1.2.tgz", {}, "sha512-OwpTSOfy6xSs1+pwcNrv0RBMOzI39Lp3qQKUTPVVPRjCdNa5JH/oPRiqsesIskK8TVgmRiHwO4KXlV2Li9dANA=="],
+
     "semver": ["semver@6.3.1", "http://mirrors.tencent.com/npm/semver/-/semver-6.3.1.tgz", { "bin": { "semver": "bin/semver.js" } }, "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA=="],
 
     "serialize-javascript": ["serialize-javascript@6.0.2", "http://mirrors.tencent.com/npm/serialize-javascript/-/serialize-javascript-6.0.2.tgz", { "dependencies": { "randombytes": "^2.1.0" } }, "sha512-Saa1xPByTTq2gdeFZYLLo+RFE35NHZkAbqZeWNd3BpzppeVisAqpDjcp8dyf6uIvEqJRd46jemmyA4iFIeVk8g=="],
@@ -703,6 +716,8 @@
     "terser": ["terser@5.43.1", "http://mirrors.tencent.com/npm/terser/-/terser-5.43.1.tgz", { "dependencies": { "@jridgewell/source-map": "^0.3.3", "acorn": "^8.14.0", "commander": "^2.20.0", "source-map-support": "~0.5.20" }, "bin": { "terser": "bin/terser" } }, "sha512-+6erLbBm0+LROX2sPXlUYx/ux5PyE9K/a92Wrt6oA+WDAoFTdpHE5tCYCI5PNzq2y8df4rA+QgHLJuR4jNymsg=="],
 
     "terser-webpack-plugin": ["terser-webpack-plugin@5.3.14", "http://mirrors.tencent.com/npm/terser-webpack-plugin/-/terser-webpack-plugin-5.3.14.tgz", { "dependencies": { "@jridgewell/trace-mapping": "^0.3.25", "jest-worker": "^27.4.5", "schema-utils": "^4.3.0", "serialize-javascript": "^6.0.2", "terser": "^5.31.1" }, "peerDependencies": { "webpack": "^5.1.0" } }, "sha512-vkZjpUjb6OMS7dhV+tILUW6BhpDR7P2L/aQSAv+Uwk+m8KATX9EccViHTJR2qDtACKPIYndLGCyl3FMo+r2LMw=="],
+
+    "tiny-emitter": ["tiny-emitter@2.1.0", "https://registry.npmmirror.com/tiny-emitter/-/tiny-emitter-2.1.0.tgz", {}, "sha512-NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q=="],
 
     "tinycolor2": ["tinycolor2@1.6.0", "http://mirrors.tencent.com/npm/tinycolor2/-/tinycolor2-1.6.0.tgz", {}, "sha512-XPaBkWQJdsf3pLKJV9p4qN/S+fm2Oj8AIPo1BTUhg5oxkvm9+SVEGFdhyOz7tTdUTfvxMiAs4sp6/eZO2Ew+pw=="],
 
@@ -773,6 +788,8 @@
     "@iconify/utils/globals": ["globals@15.15.0", "http://mirrors.tencent.com/npm/globals/-/globals-15.15.0.tgz", {}, "sha512-7ACyT3wmyp3I61S4fG682L0VA2RGD9otkqGJIwNUMF1SWUombIIk+af1unuDYgMm082aHYwD+mzJvv9Iu8dsgg=="],
 
     "@iconify/utils/local-pkg": ["local-pkg@1.1.1", "http://mirrors.tencent.com/npm/local-pkg/-/local-pkg-1.1.1.tgz", { "dependencies": { "mlly": "^1.7.4", "pkg-types": "^2.0.1", "quansync": "^0.2.8" } }, "sha512-WunYko2W1NcdfAFpuLUoucsgULmgDBRkdxHxWQ7mK0cQqwPiy8E1enjuRBrhLtZkB5iScJ1XIPdhVEFK8aOLSg=="],
+
+    "@tdesign-vue-next/chat/marked": ["marked@12.0.2", "https://registry.npmmirror.com/marked/-/marked-12.0.2.tgz", { "bin": { "marked": "bin/marked.js" } }, "sha512-qXUm7e/YKFoqFPYPa3Ukg9xlI5cyAtGmyEIzMfW//m6kXwCy2Ps9DYf5ioijFKQ8qyuscrHoY04iJGctu2Kg0Q=="],
 
     "@vue/babel-plugin-jsx/@vue/shared": ["@vue/shared@3.5.17", "http://mirrors.tencent.com/npm/@vue/shared/-/shared-3.5.17.tgz", {}, "sha512-CabR+UN630VnsJO/jHWYBC1YVXyMq94KKp6iF5MQgZJs5I8cmjw6oVMO1oDbtBkENSHSSn/UadWlW/OAgdmKrg=="],
 

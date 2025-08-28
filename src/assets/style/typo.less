@@ -1,0 +1,87 @@
+@charset "utf-8";
+.t-chat {
+  /* 去掉各Table cell 的边距并让其边重合 */
+
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-bottom: var(--td-comp-margin-xl);
+
+    th {
+      background: var(--td-bg-color-component);
+    }
+
+    thead {
+      th {
+        background: var(--td-bg-color-component);
+      }
+    }
+
+    caption {
+      border-bottom: none;
+    }
+
+    th, td, caption {
+      border: 1px solid var(--td-border-level-2-color);
+      padding: 0.5em 1em;
+    }
+  }
+
+  .t-chat__code-header {
+    border-bottom: 1px solid var(--td-border-level-2-color);
+    padding: 6px 12px;
+
+    .t-chat__copy-btn {
+      transition: color 0.3s ease-in-out;
+
+      &:hover {
+        color: var(--td-text-color-link);
+      }
+    }
+  }
+
+
+  .t-chat__text {
+    &.user {
+      background-color: var(--td-bg-color-secondarycontainer);
+      border-radius: var(--td-radius-extraLarge);
+      color: var(--td-text-color-primary) !important;
+    }
+
+
+    &.model-change {
+      span {
+        padding: 0 4px;
+        color: var(--td-text-color-link);
+      }
+    }
+
+    &.reason {
+      padding: 4px 0;
+      p {
+        margin: 0.5rem 0;
+        &:first-child {
+          margin-top: 0;
+        }
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+  }
+
+  .t-chat__inner.system {
+    display: none;
+  }
+  .t-chat__inner {
+    &:first-child {
+      margin-bottom: 32px;
+    }
+  }
+
+}
+
+
+
+

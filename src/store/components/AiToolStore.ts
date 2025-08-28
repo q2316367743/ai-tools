@@ -21,10 +21,11 @@ export const useAiToolsStore = defineStore('ai-tool', () => {
     return new Set(aiTools.value.flatMap(item => item.tags));
   })
 
-  listByAsync<AiTool>(LocalNameEnum.LIST_AI_TOOL).then(res => {
+  const init = async () => {
+    const res = await listByAsync<AiTool>(LocalNameEnum.LIST_AI_TOOL)
     aiTools.value = res.list;
     rev.value = res.rev;
-  });
+  }
 
   // 新增
   const add = async (res: AiToolPost) => {
@@ -47,7 +48,7 @@ export const useAiToolsStore = defineStore('ai-tool', () => {
     rev.value = await saveListByAsync(LocalNameEnum.LIST_AI_TOOL, aiTools.value, rev.value);
 
     // 新增详情
-    await saveOneByAsync<AiToolContent>(LocalNameEnum.ITEM_AI_TOOL + id, {
+    await saveOneByAsync<AiToolContent>(LocalNameEnum.ITEM_AI_TOOL_ + id, {
       id, created_at: now, content: res.content
     });
   }
@@ -69,7 +70,7 @@ export const useAiToolsStore = defineStore('ai-tool', () => {
         id
       };
       rev.value = await saveListByAsync(LocalNameEnum.LIST_AI_TOOL, aiTools.value, rev.value);
-      await saveOneByAsync<AiToolContent>(LocalNameEnum.ITEM_AI_TOOL + id, {
+      await saveOneByAsync<AiToolContent>(LocalNameEnum.ITEM_AI_TOOL_ + id, {
         id, created_at: aiTools.value[index].created_at, content: res.content
       })
     }
@@ -88,7 +89,7 @@ export const useAiToolsStore = defineStore('ai-tool', () => {
       aiTools.value.splice(index, 1);
       rev.value = await saveListByAsync(LocalNameEnum.LIST_AI_TOOL, aiTools.value, rev.value);
       // 删除详情
-      await removeOneByAsync(LocalNameEnum.ITEM_AI_TOOL + id);
+      await removeOneByAsync(LocalNameEnum.ITEM_AI_TOOL_ + id);
       // 删除可能存在的关键字
       utools.removeFeature(`/tool/${id}`)
     }
@@ -99,17 +100,21 @@ export const useAiToolsStore = defineStore('ai-tool', () => {
     if (index === -1) {
       return Promise.reject(new Error("AI工具不存在"))
     }
-    const res = await getFromOneByAsync<AiToolContent>(LocalNameEnum.ITEM_AI_TOOL + id);
+    const res = await getFromOneByAsync<AiToolContent>(LocalNameEnum.ITEM_AI_TOOL_ + id);
     return {
       ...aiTools.value[index],
       content: res.record?.content || ''
     }
+  }
 
+  const getContent = async (id: string): Promise<string> => {
+    const res = await getFromOneByAsync<AiToolContent>(LocalNameEnum.ITEM_AI_TOOL_ + id);
+    return res.record?.content || ''
   }
 
   return {
     aiTools, tags,
-    add, update, remove, getOne
+    init, add, update, remove, getOne, getContent
   }
 
 })

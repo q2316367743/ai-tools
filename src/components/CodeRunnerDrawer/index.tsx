@@ -32,7 +32,7 @@ export const openCodeRunnerDrawer = (html: string, options: DrawerOptions = {}) 
           src={url}
           class="preview-iframe w-full"
           frameborder="0"
-          style={{height: (options.footer ?? true) ? 'calc(100vh - 166px)' : 'calc(100vh - 94px)'}}
+          style={{height: (options.footer ?? true) ? 'calc(100vh - 121px)' : 'calc(100vh - 94px)', marginTop: '-6px'}}
           sandbox="allow-scripts allow-same-origin allow-forms"
         ></iframe>
       </div>
@@ -49,8 +49,8 @@ export const openCodeRunnerDrawer = (html: string, options: DrawerOptions = {}) 
 let closer: (() => void) | null = null;
 
 export async function openCodeRunner(id: string) {
-  const aiTool = await useAiToolsStore().getOne(id);
-  if (!aiTool) {
+  const content = await useAiToolsStore().getContent(id);
+  if (!content) {
     MessageUtil.error("AI工具不存在");
     return;
   }
@@ -60,7 +60,7 @@ export async function openCodeRunner(id: string) {
     closer = null;
   }
 
-  const blob = new Blob([aiTool.content], {type: 'text/html'})
+  const blob = new Blob([content], {type: 'text/html'})
   const url = URL.createObjectURL(blob)
   const com = defineComponent({
     setup() {

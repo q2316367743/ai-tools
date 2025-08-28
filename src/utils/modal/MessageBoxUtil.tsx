@@ -76,13 +76,15 @@ export default {
     inputPattern?: RegExp,
     inputErrorMessage?: string,
     inputValue?: string,
+    maxlength?: number,
     onClose?: () => void
   }): Promise<string> {
     const {
       inputValue = '',
       confirmButtonText = '确认',
       cancelButtonText = '取消',
-      onClose
+      onClose,
+      maxlength
     } = config || {};
     return new Promise<string>(resolve => {
       let value = ref(inputValue);
@@ -95,7 +97,8 @@ export default {
       const res = DialogPlugin({
         default: () => <div>
           <Paragraph>{content}</Paragraph>
-          <Input autofocus={true} v-model={value.value} clearable={true} onEnter={onKeydown}></Input>
+          <Input autofocus={true} v-model={value.value} clearable={true} onEnter={onKeydown}
+                 maxlength={maxlength}></Input>
         </div>,
         header: title,
         draggable: true,
