@@ -1,0 +1,47 @@
+.code-runner {
+  background-color: var(--td-bg-color-container);
+  position: relative;
+
+  .code-runner-container {
+    overflow: hidden;
+  }
+
+  .code-runner-operator {
+    position: absolute;
+    top: 8px;
+    right: 24px;
+    height: 24px;
+    width: 65px;
+    border: 1px solid white;
+    border-radius: 16px;
+    display: flex;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.2);
+    color: white;
+
+    .code-runner-btn {
+      height: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-content: center;
+      align-items: center;
+      cursor: pointer;
+      color: wheat;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+    }
+
+    .code-runner-more {
+      width: 33px;
+      border-right: 1px solid white;
+    }
+
+    .code-runner-close {
+      width: 32px;
+    }
+  }
+}
