@@ -19,7 +19,8 @@
       </t-space>
       <div class="edit-header__right">
         <t-space size="small">
-          <t-button v-if="activeKey === 'html'" theme="primary" @click="handleRunPreview" :loading="previewing">
+          <t-button v-if="activeKey === 'html'" theme="primary" variant="text" @click="handleRunPreview"
+                    :loading="previewing">
             <template #icon>
               <PlayIcon/>
             </template>
@@ -40,7 +41,7 @@
       <div v-show="activeKey === 'base'" class="info-section">
         <t-form ref="formRef" :data="formData" :rules="formRules" layout="vertical">
           <t-form-item label="图标" name="icon">
-            <ImageUpload v-model="formData.icon"/>
+            <ImageUpload :item-id="route.params.id as string"/>
           </t-form-item>
           <t-form-item label="标题" name="title">
             <t-input v-model="formData.title" placeholder="请输入工具标题"/>
@@ -54,6 +55,26 @@
           <t-form-item label="标签" name="tags">
             <t-tag-input v-model="formData.tags" placeholder="请输入标签，按回车添加" clearable/>
           </t-form-item>
+          <t-form-item label="小窗" name="mini" help="是否小窗打开，使用小窗打开就可以实现多开">
+            <t-switch v-model="formData.mini"/>
+          </t-form-item>
+          <template v-if="formData.mini">
+            <t-form-item label="宽" name="width">
+              <t-input-number v-model="formData.width" :default-value="800" placeholder="请输入窗口宽"/>
+            </t-form-item>
+            <t-form-item label="高" name="height">
+              <t-input-number v-model="formData.height" :default-value="600" placeholder="请输入窗口高"/>
+            </t-form-item>
+            <t-form-item label="是否居中" name="center">
+              <t-switch v-model="formData.center" :default-value="true"/>
+            </t-form-item>
+            <t-form-item label="x" name="x">
+              <t-input-number v-model="formData.x" placeholder="请输入窗口x坐标" :disabled="formData.center"/>
+            </t-form-item>
+            <t-form-item label="y" name="y">
+              <t-input-number v-model="formData.y" placeholder="请输入窗口y坐标" :disabled="formData.center"/>
+            </t-form-item>
+          </template>
         </t-form>
       </div>
 
@@ -96,8 +117,10 @@ const formData = ref<AiToolPost>({
   title: '',
   description: '',
   tags: [],
-  content: '',
   sessionId: '',
+  mini: false,
+  content: '',
+  center: true
 });
 
 // 表单验证规则
@@ -109,10 +132,8 @@ const formRules: TdFormProps['rules'] = {
 // 组件状态
 const formRef = ref<FormInstanceFunctions>();
 const editorRef = ref();
-const previewRef = ref();
 const saving = ref(false);
 const previewing = ref(false);
-const previewContent = ref('');
 
 let editor: monaco.editor.IStandaloneCodeEditor | null = null;
 
@@ -201,12 +222,7 @@ onMounted(() => {
   if (id !== '0') {
     useAiToolsStore().getOne(id as string).then((res) => {
       formData.value = {
-        icon: res.icon,
-        title: res.title,
-        description: res.description,
-        tags: res.tags,
-        content: res.content,
-        sessionId: res.sessionId,
+        ...res
       };
       editor?.setValue(res.content);
     })
@@ -269,6 +285,7 @@ onUnmounted(() => {
 .info-section {
 
   margin-top: 16px;
+  padding-bottom: 16px;
 
   .icon-preview {
     width: 80px;

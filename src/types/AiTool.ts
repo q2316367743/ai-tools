@@ -9,6 +9,13 @@ export interface AiToolPost {
 
   sessionId: string;
 
+  // 是否小窗打开
+  mini: boolean;
+  width?: number,
+  height?: number,
+  x?: number
+  y?: number
+  center?: boolean
   // 内容
   content: string;
 
@@ -30,11 +37,3 @@ export interface AiTool {
   is_liked: boolean;
   run_count: number;
 }
-
-
-
-export interface AiToolInfo extends AiTool {
-  content: string;
-}
-
-

@@ -1,8 +1,10 @@
 import {DrawerPlugin} from 'tdesign-vue-next'
 import {CloseIcon, MoreIcon} from "tdesign-icons-vue-next";
-import {useAiToolsStore} from "@/store";
+import {fetchAiToolContent} from "@/store";
+import {AiToolContent, AiToolInfo} from "@/types";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import './CodeRunner.less';
+import {LocalNameEnum} from "@/global/LocalNameEnum";
 
 interface DrawerOptions {
   width?: string
@@ -48,8 +50,13 @@ export const openCodeRunnerDrawer = (html: string, options: DrawerOptions = {}) 
 
 let closer: (() => void) | null = null;
 
-export async function openCodeRunner(id: string) {
-  const content = await useAiToolsStore().getContent(id);
+export async function openCodeRunner(id: string | AiToolContent) {
+  let content: AiToolContent | null;
+  if (typeof id === 'string') {
+    content = await fetchAiToolContent(id);
+  } else {
+    content = id;
+  }
   if (!content) {
     MessageUtil.error("AI工具不存在");
     return;
@@ -60,7 +67,7 @@ export async function openCodeRunner(id: string) {
     closer = null;
   }
 
-  const blob = new Blob([content], {type: 'text/html'})
+  const blob = new Blob([content.content], {type: 'text/html'})
   const url = URL.createObjectURL(blob)
   const com = defineComponent({
     setup() {
@@ -99,4 +106,31 @@ export async function openCodeRunner(id: string) {
   }
 
   closer = handleClose;
+}
+
+export async function openCodeRunnerWindow(info: AiToolInfo) {
+  const bw = utools.createBrowserWindow('src/tool.html', {
+    width: info.width || 800,
+    height: info.height || 600,
+    x: info.x,
+    y: info.y,
+    center: info.center,
+    title: 'AI工具 | ' + info.title,
+    webPreferences: {
+      preload: 'src/tool.js',
+    }
+  }, () => {
+    console.log("打开成功");
+    if (utools.isDev()) {
+      bw.webContents.openDevTools();
+    }
+    // 发送消息
+    window.preload.sendTo(bw.webContents.id, 'open-ai-tool', LocalNameEnum.ITEM_AI_TOOL_ + info.id);
+    utools.hideMainWindow();
+    utools.outPlugin(false);
+  })
+}
+
+export function closeCodeRunner() {
+  closer?.();
 }

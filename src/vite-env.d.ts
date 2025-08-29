@@ -1,9 +1,5 @@
 /// <reference types="vite/client" />
 
-interface RouteMeta {
-  hidden?: boolean;
-  icon: JSX.Element;
-}
 
 interface OpenFileOption {
   title?: string,
@@ -35,6 +31,13 @@ interface Window {
      * @param name 文件名
      * @return 文件保存的路径
      */
-    downloadFile(data: string | Blob | ArrayBuffer, name: string): Promise<string>
+    downloadFile(data: string | Blob | ArrayBuffer, name: string): Promise<string>;
+    /**
+     * 发送消息到指定窗口
+     * @param id 窗口ID
+     * @param channel 通道名称
+     * @param data  数据
+     */
+    sendTo(id: string, channel: string, data?: any);
   }
 }

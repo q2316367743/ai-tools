@@ -1,7 +1,10 @@
 <template>
-  <img :src :alt/>
+  <t-avatar :image="src" shape="round" size="48px" v-if="src" />
+  <ToolsIcon v-else />
 </template>
 <script lang="ts" setup>
+import { ToolsIcon } from 'tdesign-icons-vue-next'
+
 const props = defineProps({
   url: String,
   alt: String,
@@ -16,7 +19,7 @@ onMounted(async () => {
     URL.revokeObjectURL(src.value);
     src.value = '';
   }
-  const {url} = props;
+  const { url } = props;
   if (!url) return;
   const unit8Array = await utools.db.promises.getAttachment(url);
   if (!unit8Array) return;
@@ -28,6 +31,4 @@ onBeforeUnmount(() => {
   }
 });
 </script>
-<style scoped lang="less">
-
-</style>
+<style scoped lang="less"></style>

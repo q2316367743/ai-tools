@@ -1,5 +1,4 @@
 import {clone} from "@/utils/lang/ObjUtil";
-import {useSnowflake} from "@/hooks";
 
 // --------------------------------------- 基础对象 ---------------------------------------
 
@@ -219,36 +218,4 @@ export function setStrBySession(key: string, value: string) {
   sessionStorage.setItem(key, value);
 }
 
-// --------------------------------------- 附件 ---------------------------------------
-
-/**
- * 存储附件到新文档
- * @param attachment 附件 buffer
- * @return url
- */
-export async function postAttachment(attachment: Blob | File): Promise<string> {
-  const id = useSnowflake().nextId();
-  const docId = '/attachment/' + id;
-  const buffer = await attachment.arrayBuffer();
-  const res = await utools.db.promises.postAttachment(docId, new Uint8Array(buffer), attachment.type);
-  if (res.error) {
-    return Promise.reject(res.message);
-  }
-  return docId;
-}
-
-/**
- * 异步获取附件
- * @param docId 文档ID
- * @return 文件链接
- */
-export async function getAttachmentByAsync(docId: string): Promise<string | null> {
-  const data = await utools.db.promises.getAttachment(docId);
-  const type = await utools.db.promises.getAttachmentType(docId)
-  if (!data) {
-    return null
-  }
-  const blob = new Blob([data.buffer as ArrayBuffer], {type: type || undefined});
-  return window.URL.createObjectURL(blob);
-}
 

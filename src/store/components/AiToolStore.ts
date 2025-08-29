@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {AiTool, AiToolInfo, AiToolPost} from "@/types/AiTool";
+import {AiTool, AiToolInfo, AiToolPost} from "@/types";
 import {
   getFromOneByAsync,
   listByAsync,
@@ -10,6 +10,7 @@ import {
 import {LocalNameEnum} from "@/global/LocalNameEnum";
 import {useSnowflake} from "@/hooks";
 import {AiToolContent} from "@/types/AiToolContent";
+import {deleteAttachment} from "@/utils/utools/AttachmentUtil";
 
 export const useAiToolsStore = defineStore('ai-tool', () => {
 
@@ -49,7 +50,14 @@ export const useAiToolsStore = defineStore('ai-tool', () => {
 
     // 新增详情
     await saveOneByAsync<AiToolContent>(LocalNameEnum.ITEM_AI_TOOL_ + id, {
-      id, created_at: now, content: res.content
+      id,
+      mini: res.mini,
+      content: res.content,
+      width: res.width,
+      height: res.height,
+      x: res.x,
+      y: res.y,
+      center: res.center
     });
   }
 
@@ -71,7 +79,14 @@ export const useAiToolsStore = defineStore('ai-tool', () => {
       };
       rev.value = await saveListByAsync(LocalNameEnum.LIST_AI_TOOL, aiTools.value, rev.value);
       await saveOneByAsync<AiToolContent>(LocalNameEnum.ITEM_AI_TOOL_ + id, {
-        id, created_at: aiTools.value[index].created_at, content: res.content
+        id,
+        mini: res.mini,
+        content: res.content,
+        width: res.width,
+        height: res.height,
+        x: res.x,
+        y: res.y,
+        center: res.center
       })
     }
   }
@@ -90,6 +105,8 @@ export const useAiToolsStore = defineStore('ai-tool', () => {
       rev.value = await saveListByAsync(LocalNameEnum.LIST_AI_TOOL, aiTools.value, rev.value);
       // 删除详情
       await removeOneByAsync(LocalNameEnum.ITEM_AI_TOOL_ + id);
+      // 删除可能存在的附件
+      await deleteAttachment('/attachment/' + id);
       // 删除可能存在的关键字
       utools.removeFeature(`/tool/${id}`)
     }
@@ -98,23 +115,43 @@ export const useAiToolsStore = defineStore('ai-tool', () => {
   const getOne = async (id: string): Promise<AiToolInfo> => {
     const index = aiTools.value.findIndex(item => item.id === id);
     if (index === -1) {
-      return Promise.reject(new Error("AI工具不存在"))
+      return Promise.reject(new Error("系统异常：AI工具不存在"))
     }
     const res = await getFromOneByAsync<AiToolContent>(LocalNameEnum.ITEM_AI_TOOL_ + id);
+    if (!res.record) {
+      return Promise.reject(new Error("系统异常：AI工具详情不存在"))
+    }
     return {
       ...aiTools.value[index],
-      content: res.record?.content || ''
+      ...res.record,
     }
-  }
-
-  const getContent = async (id: string): Promise<string> => {
-    const res = await getFromOneByAsync<AiToolContent>(LocalNameEnum.ITEM_AI_TOOL_ + id);
-    return res.record?.content || ''
   }
 
   return {
     aiTools, tags,
-    init, add, update, remove, getOne, getContent
+    init, add, update, remove, getOne
   }
 
-})
+});
+
+export async function fetchAiTool(id: string): Promise<AiToolInfo> {
+  // 直接获取全部ai列表
+  const res = await listByAsync<AiTool>(LocalNameEnum.LIST_AI_TOOL)
+  const index = res.list.findIndex(item => item.id === id);
+  if (index === -1) {
+    return Promise.reject(new Error("系统异常：AI工具不存在"))
+  }
+  const content = await getFromOneByAsync<AiToolContent>(LocalNameEnum.ITEM_AI_TOOL_ + id);
+  if (!content.record) {
+    return Promise.reject(new Error("系统异常：AI工具详情不存在"))
+  }
+  return {
+    ...res.list[index],
+    ...content.record,
+  }
+}
+
+export async function fetchAiToolContent(id: string): Promise<AiToolContent | null> {
+  const res = await getFromOneByAsync<AiToolContent>(LocalNameEnum.ITEM_AI_TOOL_ + id);
+  return res.record;
+}

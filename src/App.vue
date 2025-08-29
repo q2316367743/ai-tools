@@ -4,16 +4,11 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {useAiChatGroupStore, useAiChatListStore, useAiToolsStore} from "@/store";
+import { useAiChatGroupStore, useAiChatListStore, useAiToolsStore} from "@/store";
 
 useAiToolsStore().init();
 useAiChatListStore().init();
 useAiChatGroupStore().init();
-
-utools.onPluginEnter(action => {
-  // 对关键字进行处理
-  console.log(action);
-});
 </script>
 <style scoped lang="less">
 .main {

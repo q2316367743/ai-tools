@@ -28,14 +28,13 @@
 
     <div class="list-container">
       <t-row :gutter="[8, 8]" v-if="list.length > 0">
-        <t-col flex="395px" v-for="tool in list" :key="tool.id">
+        <t-col flex="393px" v-for="tool in list" :key="tool.id">
           <t-card hover shadow>
             <div class="card-content">
               <!-- 工具图标和标题 -->
               <div class="tool-header">
                 <div class="tool-icon">
-                  <t-avatar :image="tool.icon" shape="round" size="48px" v-if="tool.icon"/>
-                  <ToolsIcon v-else/>
+                  <UtoolsImage :url="`/attachment/${tool.id}`" :alt="tool.title"/>
                 </div>
                 <div class="tool-info">
                   <t-link class="tool-name" theme="primary" @click="handlePreview(tool)">{{ tool.title }}</t-link>
@@ -65,7 +64,8 @@
                   </t-button>
                 </t-space>
                 <t-tooltip content="注册为uTools关键字">
-                  <t-switch :value="codes.includes(`/tool/${tool.id}`)" @change="toggleFeature(tool, $event)"/>
+                  <t-switch :value="codes.includes(`/tool/${tool.id}`)" @change="toggleFeature(tool, $event)"
+                            :loading="featureLoading[tool.id]"/>
                 </t-tooltip>
               </div>
             </div>
@@ -88,17 +88,21 @@
 <script lang="ts" setup>
 import {useAiToolsStore} from "@/store";
 import {useFuse} from "@vueuse/integrations/useFuse";
-import {AddIcon, ChatIcon, DeleteIcon, EditIcon, SearchIcon, ToolsIcon} from "tdesign-icons-vue-next";
+import {AddIcon, ChatIcon, DeleteIcon, EditIcon, SearchIcon} from "tdesign-icons-vue-next";
 import {AiTool} from "@/types/AiTool";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {openCodeRunner} from "@/components/CodeRunnerDrawer";
+import {SwitchValue} from "tdesign-vue-next";
+import {getAttachmentByAsync} from "@/utils/utools/AttachmentUtil";
+import {blobToDataURL} from "@/utils/file/CovertUtil";
 
 const router = useRouter();
 
 const keyword = ref('');
 const tag = ref('');
-const codes = ref(new Array<string>())
+const codes = ref(new Array<string>());
+const featureLoading = ref<Record<string, boolean>>({})
 
 const aiTools = computed(() => useAiToolsStore().aiTools);
 const tags = computed(() => useAiToolsStore().tags);
@@ -132,18 +136,31 @@ const featureFeatures = () => {
   codes.value = utools.getFeatures().map(feature => feature.code)
 }
 
-const toggleFeature = (tool: AiTool, val: boolean) => {
-  const code = `/tool/${tool.id}`;
-  if (val) {
-    utools.setFeature({
-      code,
-      explain: 'AI工具箱',
-      cmds: [tool.title]
-    })
-  } else {
-    utools.removeFeature(code);
+const toggleFeature = async (tool: AiTool, val: SwitchValue) => {
+  if (featureLoading.value[tool.id]) return;
+  featureLoading.value[tool.id] = true;
+  try {
+    const code = `/tool/${tool.id}`;
+    if (val) {
+      const attachment = await getAttachmentByAsync(`/attachment/${tool.id}`);
+      // 将blob转为data url
+      let icon: string | undefined = undefined;
+      if (attachment) {
+        icon = await blobToDataURL(attachment);
+      }
+      utools.setFeature({
+        code,
+        icon,
+        explain: 'AI工具箱',
+        cmds: [tool.title]
+      })
+    } else {
+      utools.removeFeature(code);
+    }
+    featureFeatures();
+  } finally {
+    featureLoading.value[tool.id] = false;
   }
-  featureFeatures();
 }
 
 onMounted(() => featureFeatures());
@@ -173,10 +190,11 @@ onMounted(() => featureFeatures());
 
 .list-container {
   position: absolute;
-  top: 56px;
-  left: 8px;
-  right: 8px;
-  bottom: 8px;
+  top: 48px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 8px;
   overflow-y: auto;
   overflow-x: hidden;
 }
