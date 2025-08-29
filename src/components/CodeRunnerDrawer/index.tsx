@@ -5,6 +5,7 @@ import {AiToolContent, AiToolInfo} from "@/types";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import './CodeRunner.less';
 import {LocalNameEnum} from "@/global/LocalNameEnum";
+import {cacheManage} from "@/plugin/CacheManage";
 
 interface DrawerOptions {
   width?: string
@@ -15,8 +16,9 @@ interface DrawerOptions {
 }
 
 // 使用TDesign的DrawerPlugin打开抽屉
-export const openCodeRunnerDrawer = (html: string, options: DrawerOptions = {}) => {
-  const blob = new Blob([html], {type: 'text/html'})
+export const openCodeRunnerDrawer = async (html: string, options: DrawerOptions = {}) => {
+  const safeHtml = await cacheManage.handle(html);
+  const blob = new Blob([safeHtml], {type: 'text/html'})
   const url = URL.createObjectURL(blob)
   const dp = DrawerPlugin({
     header: options.title || '抽屉',
@@ -67,7 +69,8 @@ export async function openCodeRunner(id: string | AiToolContent) {
     closer = null;
   }
 
-  const blob = new Blob([content.content], {type: 'text/html'})
+  const html = await cacheManage.handle(content.content);
+  const blob = new Blob([html], {type: 'text/html'})
   const url = URL.createObjectURL(blob)
   const com = defineComponent({
     setup() {
