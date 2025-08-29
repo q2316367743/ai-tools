@@ -6,6 +6,7 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import './CodeRunner.less';
 import {LocalNameEnum} from "@/global/LocalNameEnum";
 import {cacheManage} from "@/plugin/CacheManage";
+import {openChat2ToolDialog} from "@/components/CodeRunnerDrawer/Chat2ToolAdd";
 
 interface DrawerOptions {
   width?: string
@@ -50,6 +51,9 @@ export const openCodeRunnerDrawer = async (html: string, options: DrawerOptions 
       dp.destroy?.();
     },
     onConfirm() {
+      openChat2ToolDialog(html, () => {
+        dp.destroy?.();
+      })
     },
   });
 }

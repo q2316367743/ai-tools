@@ -46,14 +46,12 @@
           <t-form-item label="标题" name="title">
             <t-input v-model="formData.title" placeholder="请输入工具标题"/>
           </t-form-item>
-
+          <t-form-item label="标签" name="tags">
+            <t-tag-input v-model="formData.tags" placeholder="请输入标签，按回车添加" clearable/>
+          </t-form-item>
           <t-form-item label="描述" name="description">
             <t-textarea v-model="formData.description" placeholder="请输入工具描述"
                         :autosize="{ minRows: 3, maxRows: 6 }"/>
-          </t-form-item>
-
-          <t-form-item label="标签" name="tags">
-            <t-tag-input v-model="formData.tags" placeholder="请输入标签，按回车添加" clearable/>
           </t-form-item>
           <t-form-item label="小窗" name="mini" help="是否小窗打开，使用小窗打开就可以实现多开">
             <t-switch v-model="formData.mini"/>

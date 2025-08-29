@@ -4,6 +4,7 @@
 </template>
 <script lang="ts" setup>
 import { ToolsIcon } from 'tdesign-icons-vue-next'
+import {getAttachmentByAsync} from "@/utils/utools/AttachmentUtil";
 
 const props = defineProps({
   url: String,
@@ -21,9 +22,9 @@ onMounted(async () => {
   }
   const { url } = props;
   if (!url) return;
-  const unit8Array = await utools.db.promises.getAttachment(url);
-  if (!unit8Array) return;
-  src.value = URL.createObjectURL(new Blob([unit8Array]));
+  const blob = await getAttachmentByAsync(url);
+  if (!blob) return;
+  src.value = URL.createObjectURL(blob);
 });
 onBeforeUnmount(() => {
   if (src.value) {

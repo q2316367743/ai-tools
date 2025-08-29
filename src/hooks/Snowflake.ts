@@ -35,7 +35,7 @@ class CustomSnowflake {
     this.lastTimestamp = timestamp; // 更新上次生成ID的时间戳
 
     // 生成ID，包括时间戳、机器ID和序列号
-    return ((BigInt(timestamp - this.epoch) << 22n) | (BigInt(this.workerId) << 10n) | BigInt(this.sequence)).toString();
+    return ((BigInt(timestamp - this.epoch) << BigInt(22)) | (BigInt(this.workerId) << BigInt(10)) | BigInt(this.sequence)).toString();
   }
 
   // 等待下一毫秒的方法
@@ -55,7 +55,7 @@ let customSnowflake: CustomSnowflake | null = null
  */
 export function useSnowflake() {
   if (!customSnowflake) {
-    customSnowflake = new CustomSnowflake(1);
+    customSnowflake = new CustomSnowflake(1, 0);
   }
   return customSnowflake
 }

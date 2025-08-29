@@ -31,42 +31,6 @@
         </chat-reasoning>
         <chat-content v-if="item.content.length > 0" :content="item.content" :class="[item.role]"/>
       </template>
-      <template #actions="{ item, index }">
-        <t-space size="small" class="mt-8px" style="margin-left: -16px">
-          <t-tooltip content="复制">
-            <t-button theme="primary" variant="text" shape="square" size="small"
-                      @click="handleOperator('copy', item, index)">
-              <template #icon>
-                <copy-icon/>
-              </template>
-            </t-button>
-          </t-tooltip>
-          <t-tooltip content="收藏">
-            <t-button theme="primary" variant="text" shape="square" size="small"
-                      @click="handleOperator('coll', item, index)">
-              <template #icon>
-                <collection-icon/>
-              </template>
-            </t-button>
-          </t-tooltip>
-          <t-tooltip content="删除">
-            <t-button theme="danger" variant="text" shape="square" size="small"
-                      @click="handleOperator('delete', item, index)">
-              <template #icon>
-                <delete-icon/>
-              </template>
-            </t-button>
-          </t-tooltip>
-          <t-tooltip content="分享">
-            <t-button theme="primary" variant="text" shape="square" size="small"
-                      @click="handleOperator('share', item, index)">
-              <template #icon>
-                <share-icon/>
-              </template>
-            </t-button>
-          </t-tooltip>
-        </t-space>
-      </template>
       <template #footer>
         <chat-sender
           v-model="text"
@@ -113,18 +77,15 @@ import {
 import {
   ArrowDownIcon,
   CheckCircleIcon,
-  CollectionIcon,
-  CopyIcon,
   DeleteIcon,
   MenuFoldIcon,
-  ShareIcon, StopIcon
+  StopIcon
 } from "tdesign-icons-vue-next";
 import {collapsed, toggleCollapsed, model} from "@/pages/chat/model";
-import {AiChatItem} from "@/types";
+import {AiChatItem, transferAiChatItemToUtoolsAiMessage} from "@/types";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 import HomeAssistantSelect from "@/pages/chat/components/HomeAssistantSelect.vue";
-import {deepClone} from "@/utils/lang/FieldUtil";
 
 
 const text = ref('');
@@ -188,7 +149,7 @@ async function onAsk(item: AiChatItem) {
   try {
     loading.value = true;
     isStreamLoad.value = true;
-    const messages = deepClone(items.value);
+    const messages = transferAiChatItemToUtoolsAiMessage(items.value);
     items.value.unshift({
       time: Date.now(),
       role: 'assistant',
@@ -236,17 +197,6 @@ const backBottom = () => {
     behavior: 'smooth',
   });
 };
-// 复制
-const handleOperator = (op: string, item: AiChatItem, index: number) => {
-  switch (op) {
-    case 'copy':
-      return InjectionUtil.copyText(item.content)
-    case 'delete':
-      break;
-    case 'share':
-      break;
-  }
-}
 // 停止
 const handleStop = () => {
   console.log(isStreamLoad.value, abort.value);

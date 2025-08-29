@@ -95,11 +95,8 @@ import {
   ArrowDownIcon,
   CheckCircleIcon,
   ChevronDownIcon,
-  CollectionIcon,
-  CopyIcon,
   DeleteIcon,
   MenuFoldIcon,
-  ShareIcon,
   StopIcon
 } from "tdesign-icons-vue-next";
 import HomeAssistantSelect from "@/pages/chat/components/HomeAssistantSelect.vue";
@@ -110,11 +107,9 @@ import {
   AiChatGroupWrap,
   AiChatItem,
   AiChatWrap,
-  buildAiChatGroupWrap,
+  buildAiChatGroupWrap, transferAiChatItemToUtoolsAiMessage,
 } from "@/types";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {InjectionUtil} from "@/utils/utools/InjectionUtil";
-import {deepClone} from '@/utils/lang/FieldUtil';
 
 const instance = ref<AiChatWrap>();
 const group = ref<AiChatGroupWrap>(buildAiChatGroupWrap());
@@ -214,7 +209,7 @@ async function onAsk(item: AiChatItem) {
     loading.value = true;
     isStreamLoad.value = true;
     isAsked.value = true;
-    const messages = deepClone(items.value);
+    const messages = transferAiChatItemToUtoolsAiMessage(items.value);
     items.value.unshift({
       time: Date.now(),
       role: 'assistant',

@@ -77,7 +77,7 @@ const onSend = () => {
 const inputEnter = (inputValue: string) => {
   // 添加到列表中
   useAiChatListStore()
-    .post('0', inputValue, model.value, [])
+    .post('0', inputValue, model.value)
     .then(id => activeKey.value = `/home/chat/0/${id}`)
     .catch(e => MessageUtil.error("提问失败", e));
 
