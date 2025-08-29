@@ -34,11 +34,12 @@
       margin: 0;
       padding: 0;
     }
+
     .spinner {
       width: 70.4px;
       height: 70.4px;
       --clr: rgb(247, 197, 159);
-      --clr-alpha: rgb(247, 197, 159,.1);
+      --clr-alpha: rgb(247, 197, 159, .1);
       animation: spinner 1.6s infinite ease;
       transform-style: preserve-3d;
     }
@@ -92,6 +93,49 @@
         transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
       }
     }
+    
+    /* 错误显示样式 */
+    .error-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    
+    .error-title {
+      color: #ff0000;
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    .error-message {
+      color: #ff0000;
+      font-size: 16px;
+      margin-bottom: 20px;
+      text-align: center;
+      max-width: 80%;
+      word-wrap: break-word;
+    }
+    
+    .error-stack {
+      color: #ff0000;
+      font-size: 14px;
+      background-color: #ffe6e6;
+      border: 1px solid #ff0000;
+      border-radius: 4px;
+      padding: 15px;
+      width: 80%;
+      max-height: 50%;
+      overflow: auto;
+      white-space: pre-wrap;
+      text-align: left;
+    }
   </style>
 </head>
 <body>
@@ -116,40 +160,57 @@
   window.preload.ipc.onload((_e, key) => {
     (async () => {
       if (!key) {
-        utools.showNotification('缺少参数');
-        window.close();
-        return;
+        return Promise.reject(new Error('缺少参数'));
       }
       const instance = await utools.db.promises.get(key);
       if (!instance) {
-        utools.showNotification('未找到该工具');
-        window.close();
-        return;
+        return Promise.reject(new Error('未找到该工具'));
       }
       const {content} = instance.value;
 
-      cacheManage.handle(content).then(res => {
-        const blob = new Blob([res], {type: 'text/html'})
-        const url = URL.createObjectURL(blob);
-        // 删除加载中
-        document.querySelector('.spinner-wrap').remove();
-        // 创建iframe
-        const iframe = document.createElement('iframe');
-        iframe.frameBorder = '0';
-        iframe.classList.add('tool-iframe');
-        iframe.src = url;
-        document.getElementById('app').append(iframe);
-      }).catch(e => {
-        const error = document.createElement('error')
-        error.innerHTML = e;
-        document.getElementById('app').append(error);
-        utools.showNotification('加载失败');
-      })
+      const res = await cacheManage.handle(content)
+      const blob = new Blob([res], {type: 'text/html'})
+      const url = URL.createObjectURL(blob);
+      // 删除加载中
+      document.querySelector('.spinner-wrap').remove();
+      // 创建iframe
+      const iframe = document.createElement('iframe');
+      iframe.frameBorder = '0';
+      iframe.classList.add('tool-iframe');
+      iframe.src = url;
+      document.getElementById('app').append(iframe);
 
     })().then(() => console.log('初始化成功'))
       .catch(e => {
-        console.error("初始化失败", e);
-        utools.showNotification("初始化失败" + (e instanceof Error ? e.message : `${e}`));
+        // 删除加载中元素
+        document.querySelector('.spinner-wrap')?.remove();
+        
+        // 创建错误显示容器
+        const errorContainer = document.createElement('div');
+        errorContainer.className = 'error-container';
+        
+        // 创建错误标题
+        const errorTitle = document.createElement('div');
+        errorTitle.className = 'error-title';
+        errorTitle.textContent = '加载失败';
+        
+        // 创建错误信息
+        const errorMessage = document.createElement('div');
+        errorMessage.className = 'error-message';
+        errorMessage.textContent = e.message || e.toString();
+        
+        // 创建错误堆栈信息
+        const errorStack = document.createElement('div');
+        errorStack.className = 'error-stack';
+        errorStack.textContent = e.stack || '无详细堆栈信息';
+        
+        // 组装错误显示元素
+        errorContainer.appendChild(errorTitle);
+        errorContainer.appendChild(errorMessage);
+        errorContainer.appendChild(errorStack);
+        
+        // 添加到页面
+        document.getElementById('app').appendChild(errorContainer);
       });
   })
 </script>
