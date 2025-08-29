@@ -128,6 +128,7 @@ export async function openCodeRunnerWindow(info: AiToolInfo) {
     center: info.center,
     title: 'AI工具 | ' + info.title,
     webPreferences: {
+      zoomFactor: 0,
       preload: 'preload.js',
     }
   }, () => {
@@ -136,7 +137,7 @@ export async function openCodeRunnerWindow(info: AiToolInfo) {
       bw.webContents.openDevTools();
     }
     // 发送消息
-    window.preload.sendTo(bw.webContents.id, 'open-ai-tool', LocalNameEnum.ITEM_AI_TOOL_ + info.id);
+    window.preload.ipc.sendTo(bw.webContents.id, 'open-ai-tool', LocalNameEnum.ITEM_AI_TOOL_ + info.id);
     utools.hideMainWindow();
     utools.outPlugin(false);
   })

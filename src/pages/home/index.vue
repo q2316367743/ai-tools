@@ -92,12 +92,13 @@ import {AddIcon, ChatIcon, DeleteIcon, EditIcon, SearchIcon} from "tdesign-icons
 import {AiTool} from "@/types/AiTool";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {openCodeRunner} from "@/components/CodeRunnerDrawer";
+import {openCodeRunner, openCodeRunnerWindow} from "@/components/CodeRunnerDrawer";
 import {SwitchValue} from "tdesign-vue-next";
 import {getAttachmentByAsync} from "@/utils/utools/AttachmentUtil";
 import {blobToDataURL} from "@/utils/file/CovertUtil";
 
 const router = useRouter();
+const ctrl = useKeyModifier('Control');
 
 const keyword = ref('');
 const tag = ref('');
@@ -119,7 +120,15 @@ const list = computed(() => {
 })
 
 const handleEdit = (row: AiTool) => router.push('/edit/' + row.id);
-const handlePreview = (row: AiTool) => openCodeRunner(row.id);
+const handlePreview = (row: AiTool) => {
+  if (ctrl.value) {
+    useAiToolsStore().getOne(row.id).then(info => {
+      openCodeRunnerWindow(info)
+    }).catch(e => MessageUtil.error("预览失败", e))
+  } else {
+    openCodeRunner(row.id);
+  }
+}
 const handleAdd = () => router.push('/edit/0');
 const handleChat = () => router.push('/chat');
 const handleDelete = (row: AiTool) => {

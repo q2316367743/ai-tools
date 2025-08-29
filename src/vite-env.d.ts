@@ -20,7 +20,7 @@ interface Window {
        * @param channel 通道名称
        * @param data  数据
        */
-      sendTo(id: string, channel: string, data?: any);
+      sendTo(id: number, channel: string, data?: any);
       onload(callback: (e: Event, data: any) => void): void;
     },
     fs: {
