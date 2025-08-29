@@ -10,7 +10,7 @@ import {
 import {LocalNameEnum} from "@/global/LocalNameEnum";
 import {useSnowflake} from "@/hooks";
 import {AiToolContent} from "@/types/AiToolContent";
-import {deleteAttachment} from "@/utils/utools/AttachmentUtil";
+import {deleteAttachment, getAttachmentByAsync, postAttachment} from "@/utils/utools/AttachmentUtil";
 
 export const useAiToolsStore = defineStore('ai-tool', () => {
 
@@ -59,6 +59,14 @@ export const useAiToolsStore = defineStore('ai-tool', () => {
       y: res.y,
       center: res.center
     });
+    // 处理附件问题
+    const icon = await getAttachmentByAsync('/attachment/0');
+    if (icon) {
+      // 保存附件
+      await postAttachment(icon, '/attachment/' + id);
+      // 删除临时
+      await deleteAttachment('/attachment/0')
+    }
   }
 
   // 更新
