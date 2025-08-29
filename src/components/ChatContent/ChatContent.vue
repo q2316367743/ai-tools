@@ -26,8 +26,8 @@ const loadHighlightStyle = () => {
   link.rel = 'stylesheet'
   link.setAttribute('data-highlight-theme', 'true')
   link.href = isDarkMode
-    ? '/github-dark.min.css'
-    : '/github.min.css'
+    ? './github-dark.min.css'
+    : './github.min.css'
 
   document.head.appendChild(link)
 }
@@ -227,22 +227,6 @@ onUnmounted(() => {
   }
 })
 
-// 格式化时间
-const formatTime = (timestamp: number) => {
-  const date = new Date(timestamp)
-  const now = new Date()
-  const diff = now.getTime() - date.getTime()
-
-  if (diff < 60000) { // 1分钟内
-    return '刚刚'
-  } else if (diff < 3600000) { // 1小时内
-    return `${Math.floor(diff / 60000)}分钟前`
-  } else if (date.toDateString() === now.toDateString()) { // 今天
-    return date.toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'})
-  } else {
-    return date.toLocaleDateString('zh-CN', {month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'})
-  }
-}
 </script>
 
 <style scoped>
@@ -253,6 +237,7 @@ const formatTime = (timestamp: number) => {
   padding: 12px;
   border-radius: 8px;
   transition: background-color 0.2s;
+  color: var(--td-text-color-primary);
 }
 
 .message-body {

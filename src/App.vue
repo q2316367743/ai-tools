@@ -5,7 +5,6 @@
 </template>
 <script lang="ts" setup>
 import { useAiChatGroupStore, useAiChatListStore, useAiToolsStore} from "@/store";
-
 useAiToolsStore().init();
 useAiChatListStore().init();
 useAiChatGroupStore().init();

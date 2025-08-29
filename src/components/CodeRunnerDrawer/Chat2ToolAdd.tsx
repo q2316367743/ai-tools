@@ -29,7 +29,7 @@ export function openChat2ToolDialog(content: string, onSuccess: () => void) {
         <Textarea v-model={[form.value.description]} autosize={{minRows: 3, maxRows: 6}}/>
       </FormItem>
       <FormItem label="小窗" name="mini" help="是否小窗打开，使用小窗打开就可以实现多开">
-        <t-switch v-model={form.value.mini}/>
+        <Switch v-model={form.value.mini}/>
       </FormItem>
       {form.value.mini && <>
         <FormItem label="宽" name="width">
