@@ -5,7 +5,8 @@ export class CacheManage {
     const doc = parser.parseFromString(html, "text/html");
     await this.processStylesheets(doc);
     await this.processScripts(doc);
-    await this.processImages(doc);
+    // 远程图片可以加载
+    // await this.processImages(doc);
     return doc.documentElement.outerHTML;
   }
   async processStylesheets(doc) {
