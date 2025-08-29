@@ -27,9 +27,14 @@
 </head>
 <body>
 <div id="app">
+  <div class="loading">正在加载中 ...</div>
 </div>
 </body>
 <script type="module">
+  import {CacheManage} from './CacheManage';
+
+  const cacheManage = new CacheManage();
+
   window.preload.onload((_e, key) => {
     (async () => {
       if (!key) {
@@ -45,13 +50,21 @@
       }
       const {content} = instance.value;
 
-      const blob = new Blob([content], {type: 'text/html'})
-      const url = URL.createObjectURL(blob);
-      const iframe = document.createElement('iframe');
-      iframe.frameBorder = '0';
-      iframe.classList.add('tool-iframe');
-      iframe.src = url;
-      document.getElementById('app').append(iframe);
+      cacheManage.handle(content).then(res => {
+        const blob = new Blob([res], {type: 'text/html'})
+        const url = URL.createObjectURL(blob);
+        const iframe = document.createElement('iframe');
+        iframe.frameBorder = '0';
+        iframe.classList.add('tool-iframe');
+        iframe.src = url;
+        document.getElementById('app').append(iframe);
+      }).catch(e => {
+        const error = document.createElement('error')
+        error.innerHTML = e;
+        document.getElementById('app').append(error);
+        utools.showNotification('加载失败');
+      })
+
     })().then(() => console.log('初始化成功'))
       .catch(e => {
         console.error("初始化失败", e);

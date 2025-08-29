@@ -13,13 +13,16 @@ interface OpenFileOption {
 
 interface Window {
   preload: {
-    /**
-     * 发送消息到指定窗口
-     * @param id 窗口ID
-     * @param channel 通道名称
-     * @param data  数据
-     */
-    sendTo(id: string, channel: string, data?: any);
+    ipc: {
+      /**
+       * 发送消息到指定窗口
+       * @param id 窗口ID
+       * @param channel 通道名称
+       * @param data  数据
+       */
+      sendTo(id: string, channel: string, data?: any);
+      onload(callback: (e: Event, data: any) => void): void;
+    },
     fs: {
       /**
        * 下载一个链接到指定文件路径
@@ -32,7 +35,12 @@ interface Window {
        * @param path 路径
        * @param recursive 递归创建
        */
-      mkdir(path: string, recursive?: boolean): void;
+      mkdir(path: string, recursive?: boolean): Promise<void>;
+      /**
+       * 判断路径是否存在
+       * @param path 路径
+       */
+      existsSync(path: string): boolean
     },
     path: {
       /**
@@ -40,6 +48,11 @@ interface Window {
        * @param path 路径部门
        */
       join(...path: string[]): string;
+      /**
+       * 获取路径的目录名
+       * @param path 路径
+       */
+      dirname(path: string): string;
     }
   }
 }

@@ -1,4 +1,4 @@
-import {DrawerPlugin} from 'tdesign-vue-next'
+import {DrawerPlugin, Loading} from 'tdesign-vue-next'
 import {CloseIcon, MoreIcon} from "tdesign-icons-vue-next";
 import {fetchAiToolContent} from "@/store";
 import {AiToolContent, AiToolInfo} from "@/types";
@@ -17,9 +17,13 @@ interface DrawerOptions {
 
 // 使用TDesign的DrawerPlugin打开抽屉
 export const openCodeRunnerDrawer = async (html: string, options: DrawerOptions = {}) => {
-  const safeHtml = await cacheManage.handle(html);
-  const blob = new Blob([safeHtml], {type: 'text/html'})
-  const url = URL.createObjectURL(blob)
+
+  const url = ref("");
+  cacheManage.handle(html).then(safeHtml => {
+    const blob = new Blob([safeHtml], {type: 'text/html'})
+    url.value = URL.createObjectURL(blob)
+  });
+
   const dp = DrawerPlugin({
     header: options.title || '抽屉',
     size: options.width || '50vw',
@@ -32,17 +36,17 @@ export const openCodeRunnerDrawer = async (html: string, options: DrawerOptions 
     },
     default: () => <>
       <div class="iframe-container">
-        <iframe
-          src={url}
+        {url.value ? <iframe
+          src={url.value}
           class="preview-iframe w-full"
           frameborder="0"
           style={{height: (options.footer ?? true) ? 'calc(100vh - 121px)' : 'calc(100vh - 94px)', marginTop: '-6px'}}
           sandbox="allow-scripts allow-same-origin allow-forms"
-        ></iframe>
+        ></iframe> : <Loading loading={true} text={'正在缓存远程资源'} class={'w-full h-full'}/>}
       </div>
     </>,
     onClose() {
-      URL.revokeObjectURL(url);
+      URL.revokeObjectURL(url.value);
       dp.destroy?.();
     },
     onConfirm() {
@@ -69,20 +73,24 @@ export async function openCodeRunner(id: string | AiToolContent) {
     closer = null;
   }
 
-  const html = await cacheManage.handle(content.content);
-  const blob = new Blob([html], {type: 'text/html'})
-  const url = URL.createObjectURL(blob)
+  const url = ref("");
+  cacheManage.handle(content.content).then(safeHtml => {
+    const blob = new Blob([safeHtml], {type: 'text/html'})
+    url.value = URL.createObjectURL(blob)
+  });
+
+
   const com = defineComponent({
     setup() {
       return () => <>
         <div class="code-runner w-100vw h-100vh">
           <div class={'code-runner-container w-full h-full overflow-auto'}>
-            <iframe
-              src={url}
+            {url.value ? <iframe
+              src={url.value}
               class="preview-iframe w-full h-full"
               frameborder="0"
               sandbox="allow-scripts allow-same-origin allow-forms"
-            ></iframe>
+            ></iframe> : <Loading loading={true} text={'正在缓存远程资源'} class={'w-full h-full'}/>}
           </div>
           <div class={'code-runner-operator'}>
             <div class={'code-runner-btn code-runner-more'}>
@@ -105,7 +113,7 @@ export async function openCodeRunner(id: string | AiToolContent) {
   function handleClose() {
     app.unmount();
     wrapper.remove();
-    URL.revokeObjectURL(url)
+    URL.revokeObjectURL(url.value)
   }
 
   closer = handleClose;
@@ -120,7 +128,7 @@ export async function openCodeRunnerWindow(info: AiToolInfo) {
     center: info.center,
     title: 'AI工具 | ' + info.title,
     webPreferences: {
-      preload: 'src/tool.js',
+      preload: 'preload.js',
     }
   }, () => {
     console.log("打开成功");
