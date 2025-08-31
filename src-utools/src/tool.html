@@ -13,8 +13,48 @@
     #app {
       width: 100vw;
       height: 100vh;
+      position: relative;
+    }
+
+    #app-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 32px;
+      background-color: white;
+      user-select: none;
+      -webkit-app-region: drag;
+    }
+
+    #app-title {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      text-align: center;
+      line-height: 32px;
+    }
+
+    #app-operator {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      -webkit-app-region: no-drag;
+    }
+
+    #app-container {
+      position: absolute;
+      top: 32px;
+      left: 0;
+      right: 0;
+      bottom: 0;
       overflow: hidden;
     }
+
 
     .spinner-wrap {
       display: flex;
@@ -93,7 +133,7 @@
         transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
       }
     }
-    
+
     /* 错误显示样式 */
     .error-container {
       display: flex;
@@ -105,7 +145,7 @@
       padding: 20px;
       box-sizing: border-box;
     }
-    
+
     .error-title {
       color: #ff0000;
       font-size: 24px;
@@ -113,7 +153,7 @@
       margin-bottom: 20px;
       text-align: center;
     }
-    
+
     .error-message {
       color: #ff0000;
       font-size: 16px;
@@ -122,7 +162,7 @@
       max-width: 80%;
       word-wrap: break-word;
     }
-    
+
     .error-stack {
       color: #ff0000;
       font-size: 14px;
@@ -140,14 +180,23 @@
 </head>
 <body>
 <div id="app">
-  <div class="spinner-wrap">
-    <div class="spinner">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+  <div id="app-header">
+    <div id="app-title">AI工具箱</div>
+    <div id="app-operator">
+      <button id="app-top">置顶</button>
+      <button id="app-close">关闭</button>
+    </div>
+  </div>
+  <div id="app-container">
+    <div class="spinner-wrap">
+      <div class="spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
     </div>
   </div>
 </div>
@@ -157,16 +206,28 @@
 
   const cacheManage = new CacheManage();
 
-  window.preload.ipc.onload((_e, key) => {
+  document.getElementById('app-top').addEventListener('click', () => {
+    utools.sendToParent('handle-ai-tool', {
+      event: 'top'
+    });
+  })
+  document.getElementById('app-close').addEventListener('click', () => {
+    utools.sendToParent('handle-ai-tool', {
+      event: 'close'
+    });
+    window.close();
+  });
+
+  const handleInit = (instance) => {
     (async () => {
-      if (!key) {
+      console.log("开始加载", instance)
+      if (!instance) {
         return Promise.reject(new Error('缺少参数'));
       }
-      const instance = await utools.db.promises.get(key);
-      if (!instance) {
-        return Promise.reject(new Error('未找到该工具'));
-      }
-      const {content} = instance.value;
+      const {content, title} = instance;
+
+      // 修改标题
+      document.getElementById('app-title').innerHTML = title;
 
       const res = await cacheManage.handle(content)
       const blob = new Blob([res], {type: 'text/html'})
@@ -178,40 +239,59 @@
       iframe.frameBorder = '0';
       iframe.classList.add('tool-iframe');
       iframe.src = url;
-      document.getElementById('app').append(iframe);
+      document.getElementById('app-container').append(iframe);
 
-    })().then(() => console.log('初始化成功'))
+    })()
+      .then(() => console.log('初始化成功'))
       .catch(e => {
         // 删除加载中元素
         document.querySelector('.spinner-wrap')?.remove();
-        
+
         // 创建错误显示容器
         const errorContainer = document.createElement('div');
         errorContainer.className = 'error-container';
-        
+
         // 创建错误标题
         const errorTitle = document.createElement('div');
         errorTitle.className = 'error-title';
         errorTitle.textContent = '加载失败';
-        
+
         // 创建错误信息
         const errorMessage = document.createElement('div');
         errorMessage.className = 'error-message';
         errorMessage.textContent = e.message || e.toString();
-        
+
         // 创建错误堆栈信息
         const errorStack = document.createElement('div');
         errorStack.className = 'error-stack';
         errorStack.textContent = e.stack || '无详细堆栈信息';
-        
+
         // 组装错误显示元素
         errorContainer.appendChild(errorTitle);
         errorContainer.appendChild(errorMessage);
         errorContainer.appendChild(errorStack);
-        
+
         // 添加到页面
-        document.getElementById('app').appendChild(errorContainer);
+        document.getElementById('app-container').appendChild(errorContainer);
       });
-  })
+  }
+
+  const handleTop = (top) => {
+    if (top) {
+      document.getElementById('app-top').classList.add('top')
+    } else {
+      document.getElementById('app-top').classList.remove('top')
+    }
+  }
+
+  window.preload.ipc.handleFromParent((_e, payload) => {
+    const {event, data} = payload;
+    if (event === 'init') {
+      handleInit(data);
+    } else if (event === 'top') {
+      handleTop(data.top);
+    }
+  });
+
 </script>
 </html>

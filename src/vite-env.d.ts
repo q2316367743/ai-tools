@@ -14,14 +14,10 @@ interface OpenFileOption {
 interface Window {
   preload: {
     ipc: {
-      /**
-       * 发送消息到指定窗口
-       * @param id 窗口ID
-       * @param channel 通道名称
-       * @param data  数据
-       */
-      sendTo(id: number, channel: string, data?: any);
-      onload(callback: (e: Event, data: any) => void): void;
+      // 发送消息到指定窗口
+      sendToWindow(id: number, payload: { event: string, data?: any });
+      handleFromParent(callback: (e: Event, payload: { event: string, data?: any }) => void): void;
+      handleFromWindow(callback: (e: { senderId: number }, payload: { event: string, data?: any }) => void): void;
     },
     fs: {
       /**

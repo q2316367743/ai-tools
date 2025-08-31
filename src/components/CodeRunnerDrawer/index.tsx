@@ -7,6 +7,7 @@ import './CodeRunner.less';
 import {LocalNameEnum} from "@/global/LocalNameEnum";
 import {cacheManage} from "@/plugin/CacheManage";
 import {openChat2ToolDialog} from "@/components/CodeRunnerDrawer/Chat2ToolAdd";
+import {deepClone} from "@/utils/lang/ObjUtil";
 
 interface DrawerOptions {
   width?: string
@@ -60,7 +61,7 @@ export const openCodeRunnerDrawer = async (html: string, options: DrawerOptions 
 
 let closer: (() => void) | null = null;
 
-export async function openCodeRunner(id: string | AiToolContent) {
+export async function openCodeRunnerIframe(id: string | AiToolContent) {
   let content: AiToolContent | null;
   if (typeof id === 'string') {
     content = await fetchAiToolContent(id);
@@ -123,6 +124,17 @@ export async function openCodeRunner(id: string | AiToolContent) {
   closer = handleClose;
 }
 
+export function closeCodeRunnerIframe() {
+  closer?.();
+}
+
+
+const windowMap = new Map<number, BrowserWindow.WindowInstance>()
+
+/**
+ * 打开代码运行窗口
+ * @param info
+ */
 export async function openCodeRunnerWindow(info: AiToolInfo) {
   const bw = utools.createBrowserWindow('src/tool.html', {
     width: info.width || 800,
@@ -131,22 +143,70 @@ export async function openCodeRunnerWindow(info: AiToolInfo) {
     y: info.y,
     center: info.center,
     title: 'AI工具 | ' + info.title,
+    frame: false,
+    transparent: true,
     webPreferences: {
       zoomFactor: 0,
       preload: 'preload.js',
+      nodeIntegration: true
     }
   }, () => {
-    console.log("打开成功");
-    if (utools.isDev()) {
-      bw.webContents.openDevTools();
+    try {
+
+      console.log("准备打开");
+      if (utools.isDev()) {
+        console.log("打开开发者工具");
+        bw.webContents.openDevTools();
+      }
+      // 发送消息
+      console.log("发送消息");
+      window.preload.ipc.sendToWindow(bw.webContents.id, {
+        event: 'init',
+        data: deepClone(info)
+      });
+      console.log("隐藏主窗口");
+      utools.hideMainWindow();
+      utools.outPlugin(false);
+      console.log("打开成功");
+      windowMap.set(bw.webContents.id, bw);
+    } catch (e) {
+      console.error("打开失败", e);
     }
-    // 发送消息
-    window.preload.ipc.sendTo(bw.webContents.id, 'open-ai-tool', LocalNameEnum.ITEM_AI_TOOL_ + info.id);
-    utools.hideMainWindow();
-    utools.outPlugin(false);
   })
 }
 
-export function closeCodeRunner() {
-  closer?.();
-}
+// 监听事件
+window.preload.ipc.handleFromWindow((e, payload) => {
+  console.log(e, payload);
+  const {senderId} = e;
+  const {event, data} = payload;
+  const bw = windowMap.get(senderId);
+  if (!bw) {
+    MessageUtil.error("窗口不存在");
+    return;
+  }
+
+  try {
+    switch (event) {
+      case 'close':
+        console.log("关闭窗口");
+        bw.close();
+        bw.destory();
+        windowMap.delete(senderId);
+        break;
+      case 'top':
+        console.log("置顶窗口");
+        const top = !bw.isAlwaysOnTop();
+        bw.setAlwaysOnTop(top);
+        window.preload.ipc.sendToWindow(senderId, {
+          event: 'top',
+          data: {
+            top
+          }
+        })
+        break;
+    }
+  } catch (e) {
+    MessageUtil.error("操作失败", e);
+  }
+})

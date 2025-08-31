@@ -33,12 +33,15 @@ async function downloadUrl(url, path) {
 
 window.preload = {
   ipc: {
-    onload(callback) {
-      ipcRenderer.once('open-ai-tool', callback);
+    handleFromParent(callback) {
+      ipcRenderer.on('open-ai-tool', callback);
     },
-    sendTo(id, channel, data) {
-      ipcRenderer.sendTo(id, channel, data)
-    }
+    sendToWindow(id, data) {
+      ipcRenderer.sendTo(id, 'open-ai-tool', data)
+    },
+    handleFromWindow(callback) {
+      ipcRenderer.on('handle-ai-tool', callback);
+    },
   },
   fs: {
     async mkdir(path, recursive) {

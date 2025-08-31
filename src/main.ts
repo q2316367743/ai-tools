@@ -2,7 +2,6 @@ import {createApp} from 'vue'
 import {createPinia} from 'pinia';
 import App from './App.vue'
 import {router} from './plugin/router';
-import {closeCodeRunner, openCodeRunner, openCodeRunnerWindow} from "@/components/CodeRunnerDrawer";
 import {fetchAiTool} from "@/store";
 
 import 'virtual:uno.css'
@@ -19,10 +18,11 @@ createApp(App)
 
 utools.onPluginEnter(async action => {
   console.log('插件启动', action);
+  const {closeCodeRunnerIframe, openCodeRunnerIframe, openCodeRunnerWindow} = await import('@/components/CodeRunnerDrawer')
   // 对关键字进行处理
   const {code} = action;
   if (code === '/app/launch') {
-    closeCodeRunner()
+    closeCodeRunnerIframe()
   } else if (/^\/tool\//.test(code)) {
     try {
       const id = code.replace(/^\/tool\//, '');
@@ -33,7 +33,7 @@ utools.onPluginEnter(async action => {
         await openCodeRunnerWindow(content);
       } else {
         console.log("大窗打开")
-        await openCodeRunner(content);
+        await openCodeRunnerIframe(content);
       }
     } catch (e) {
       console.error(e);

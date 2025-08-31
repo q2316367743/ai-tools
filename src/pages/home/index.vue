@@ -92,7 +92,7 @@ import {AddIcon, ChatIcon, DeleteIcon, EditIcon, SearchIcon} from "tdesign-icons
 import {AiTool} from "@/types/AiTool";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {openCodeRunner, openCodeRunnerWindow} from "@/components/CodeRunnerDrawer";
+import {openCodeRunnerIframe, openCodeRunnerWindow} from "@/components/CodeRunnerDrawer";
 import {SwitchValue} from "tdesign-vue-next";
 import {getAttachmentByAsync} from "@/utils/utools/AttachmentUtil";
 import {blobToDataURL} from "@/utils/file/CovertUtil";
@@ -126,7 +126,7 @@ const handlePreview = (row: AiTool) => {
       openCodeRunnerWindow(info)
     }).catch(e => MessageUtil.error("预览失败", e))
   } else {
-    openCodeRunner(row.id);
+    openCodeRunnerIframe(row.id);
   }
 }
 const handleAdd = () => router.push('/edit/0');
