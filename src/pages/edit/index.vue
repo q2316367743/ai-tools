@@ -19,14 +19,14 @@
       </t-space>
       <div class="edit-header__right">
         <t-space size="small">
-          <t-button v-if="activeKey === 'html'" theme="primary" variant="text" @click="handleRunPreview"
+          <t-button v-if="activeKey === 'html'" theme="primary" @click="handleRunPreview"
                     :loading="previewing">
             <template #icon>
               <PlayIcon/>
             </template>
             运行预览
           </t-button>
-          <t-button theme="primary" variant="text" shape="square" @click="handleSave">
+          <t-button theme="primary" shape="square" @click="handleSave">
             <template #icon>
               <save-icon/>
             </template>
@@ -316,8 +316,6 @@ onUnmounted(() => {
 
     .monaco-editor-wrapper {
       flex: 1;
-      border: 1px solid var(--td-border-level-2-color);
-      border-radius: 6px;
       overflow: hidden;
 
       .monaco-editor {
@@ -325,32 +323,6 @@ onUnmounted(() => {
       }
     }
 
-    .preview-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      border: 1px solid var(--td-border-level-2-color);
-      border-radius: 6px;
-      overflow: hidden;
-
-      .preview-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 12px 16px;
-        background: var(--td-bg-color-container);
-        border-bottom: 1px solid var(--td-border-level-2-color);
-        font-size: 14px;
-        font-weight: 500;
-        color: var(--td-text-color-primary);
-      }
-
-      .preview-iframe {
-        flex: 1;
-        border: none;
-        background: var(--td-bg-color-container);
-      }
-    }
   }
 }
 

@@ -185,7 +185,7 @@ onMounted(() => featureFeatures());
 .search-container {
   display: flex;
   justify-content: space-between;
-  padding: 8px;
+  padding: 8px 8px 4px;
 
   .search {
     width: clamp(300px, 50%, 500px);
@@ -199,11 +199,11 @@ onMounted(() => featureFeatures());
 
 .list-container {
   position: absolute;
-  top: 48px;
+  top: 44px;
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 8px;
+  padding: 4px 8px 8px;
   overflow-y: auto;
   overflow-x: hidden;
 }
