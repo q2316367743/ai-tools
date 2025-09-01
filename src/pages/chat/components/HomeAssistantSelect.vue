@@ -14,10 +14,15 @@ const serviceOptions = computedAsync<Array<SelectOption>>(async () => {
   return models.map(e => ({
     label: e.label,
     value: e.id,
-    content: (h) => h(Space, {size: 'small', title: e.description, class: 'items-center'}, () => ([
-      h(Avatar, {image: e.icon}),
-      h('span', {}, e.label)
-    ]))
+    content: (h) => {
+      const children = [
+        h('span', {}, e.label)
+      ];
+      if (e.icon) {
+        children.unshift(h(Avatar, {image: e.icon, size: "24px"}))
+      }
+      return h(Space, {size: 'small', title: e.description, class: 'items-center'}, () => (children));
+    }
   }))
 });
 
