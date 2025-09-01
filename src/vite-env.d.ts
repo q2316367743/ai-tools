@@ -17,7 +17,7 @@ interface Window {
       // 发送消息到指定窗口
       sendToWindow(id: number, payload: { event: string, data?: any });
       handleFromParent(callback: (e: Event, payload: { event: string, data?: any }) => void): void;
-      handleFromWindow(callback: (e: { senderId: number }, payload: { event: string, data?: any }) => void): void;
+      handleFromWindow(callback: (e: { senderId: number }, payload: { event: string, senderId: number, data?: any }) => void): void;
     },
     fs: {
       /**

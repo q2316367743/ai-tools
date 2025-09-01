@@ -4,7 +4,6 @@ import {fetchAiToolContent} from "@/store";
 import {AiToolContent, AiToolInfo} from "@/types";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import './CodeRunner.less';
-import {LocalNameEnum} from "@/global/LocalNameEnum";
 import {cacheManage} from "@/plugin/CacheManage";
 import {openChat2ToolDialog} from "@/components/CodeRunnerDrawer/Chat2ToolAdd";
 import {deepClone} from "@/utils/lang/ObjUtil";
@@ -157,18 +156,24 @@ export async function openCodeRunnerWindow(info: AiToolInfo) {
       if (utools.isDev()) {
         console.log("打开开发者工具");
         bw.webContents.openDevTools();
+      } else {
+        console.log("隐藏主窗口");
+        utools.hideMainWindow();
+        utools.outPlugin(false);
       }
       // 发送消息
       console.log("发送消息");
       window.preload.ipc.sendToWindow(bw.webContents.id, {
         event: 'init',
-        data: deepClone(info)
+        data: {
+          ...deepClone(info),
+          senderId: bw.webContents.id
+        }
       });
-      console.log("隐藏主窗口");
-      utools.hideMainWindow();
-      utools.outPlugin(false);
+
       console.log("打开成功");
       windowMap.set(bw.webContents.id, bw);
+      console.log(windowMap)
     } catch (e) {
       console.error("打开失败", e);
     }
@@ -178,8 +183,7 @@ export async function openCodeRunnerWindow(info: AiToolInfo) {
 // 监听事件
 window.preload.ipc.handleFromWindow((e, payload) => {
   console.log(e, payload);
-  const {senderId} = e;
-  const {event, data} = payload;
+  const {event, senderId, data} = payload;
   const bw = windowMap.get(senderId);
   if (!bw) {
     MessageUtil.error("窗口不存在");
@@ -191,7 +195,6 @@ window.preload.ipc.handleFromWindow((e, payload) => {
       case 'close':
         console.log("关闭窗口");
         bw.close();
-        bw.destory();
         windowMap.delete(senderId);
         break;
       case 'top':
