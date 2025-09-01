@@ -261,6 +261,8 @@
 
       // 修改标题
       document.getElementById('app-title').innerHTML = title;
+      // 设置页面title
+      document.title = title;
 
       const res = await cacheManage.handle(content)
       const blob = new Blob([res], {type: 'text/html'})

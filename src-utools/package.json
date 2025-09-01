@@ -1,6 +1,6 @@
 {
-  "name": "vite-utools-template",
-  "version": "1.0.0",
+  "name": "ai-tools",
+  "version": "1.0.1",
   "description": "",
   "main": "preload.js",
   "author": "",
